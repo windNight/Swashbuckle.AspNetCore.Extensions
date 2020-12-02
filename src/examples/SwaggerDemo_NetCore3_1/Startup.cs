@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Extensions;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SwaggerDemo_NetCore3_1
 {
@@ -35,7 +36,16 @@ namespace SwaggerDemo_NetCore3_1
             }
 
             app.UseRouting();
-            app.UseSwaggerConfig(NamespaceName);
+            app.UseSwaggerConfig(NamespaceName, swaggerUIOptionsAction: options =>
+            {
+                options.DisplayOperationId();
+                options.DisplayRequestDuration();
+                options.DocExpansion(DocExpansion.Full);
+                options.EnableDeepLinking();
+                options.EnableFilter();
+                options.ShowExtensions();
+                options.EnableValidator();
+            });
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

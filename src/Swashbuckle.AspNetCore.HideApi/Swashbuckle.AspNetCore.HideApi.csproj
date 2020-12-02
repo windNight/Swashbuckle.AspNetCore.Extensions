@@ -1,44 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\build\common.props" />
+
 
 	<PropertyGroup>
-		<!--<TargetFrameworks>netstandard2.0;netstandard2.1;</TargetFrameworks> -->
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyVersion>1.0.1</AssemblyVersion>
-		<FileVersion>1.0.1</FileVersion>
-		<Version>1.0.1</Version>
-		<Authors>windnight</Authors>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Title>$(AssemblyName)</Title>
 		<Description>
 			add HiddenApiAttribute and HiddenSwaggerFilter support config to show hiddenapi or not .
 		</Description>
 		<PackageReleaseNotes>
 			add HiddenApiAttribute and HiddenSwaggerFilter support config to show hiddenapi or not .
 		</PackageReleaseNotes>
-		<!--<PackageIconUrl></PackageIconUrl>-->
-		<PackageProjectUrl>https://github.com/windNight/Swashbuckle.AspNetCore.Extensions</PackageProjectUrl>
-		<PackageLicenseUrl>//</PackageLicenseUrl>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-		<ApplicationIcon>logo.ico</ApplicationIcon>
-		<PackageIcon>logo.png</PackageIcon>
+
 	</PropertyGroup>
 
 
 	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	</ItemGroup>
 
 
-	<ItemGroup>
-		<None Include="logo.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="logo.ico">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+
 
 </Project>

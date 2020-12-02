@@ -17,11 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwaggerDemo_NetCore3_0", "e
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "res", "res", "{6F9A354D-F59C-4239-A6D9-6BC33B2B0E16}"
 	ProjectSection(SolutionItems) = preProject
+		..\build\common.props = ..\build\common.props
 		..\logo.ico = ..\logo.ico
 		..\logo.png = ..\logo.png
+		..\build\version.props = ..\build\version.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swashbuckle.NetFx.HideApi", "Swashbuckle.NetFx.HideApi\Swashbuckle.NetFx.HideApi.csproj", "{A71B8CFC-79C4-415F-938F-448EFD3959F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swashbuckle.NetFx.HideApi", "Swashbuckle.NetFx.HideApi\Swashbuckle.NetFx.HideApi.csproj", "{A71B8CFC-79C4-415F-938F-448EFD3959F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwaggerDemo_Net45", "examples\SwaggerDemo_Net45\SwaggerDemo_Net45.csproj", "{BBC53AEB-2CE0-4343-A218-CD073E48A358}"
 EndProject
