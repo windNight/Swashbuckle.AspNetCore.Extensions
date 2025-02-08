@@ -10,7 +10,7 @@ namespace SwaggerDemo_NetCore3_0.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [HiddenApi]
+    [HiddenApi(TestApi = true)]
     public class WeatherForecast2Controller : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -26,6 +26,7 @@ namespace SwaggerDemo_NetCore3_0.Controllers
         }
 
         [HttpGet]
+        [HiddenApi(true)]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
@@ -39,7 +40,7 @@ namespace SwaggerDemo_NetCore3_0.Controllers
         }
 
         [HttpGet("testhiddenapi2")]
-        [HiddenApi]
+        [HiddenApi(false)]
         public IEnumerable<WeatherForecast> GetWithHidden()
         {
             var rng = new Random();

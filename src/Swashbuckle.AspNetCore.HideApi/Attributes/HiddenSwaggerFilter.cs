@@ -1,5 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Extensions.Internal;
+﻿using System.Reflection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Extensions.@internal;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace System.Attributes
@@ -11,12 +12,16 @@ namespace System.Attributes
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
+
             if (ConfigItems.HiddenSwagger) // When clear swaggerDoc.Paths
             {
                 if (context.ApiDescriptions == null) return;
                 try
                 {
+                    swaggerDoc.Info = null;
                     swaggerDoc.Paths.Clear();
+
+                    swaggerDoc.Components.Schemas.Clear();
                 }
                 catch
                 {
@@ -24,4 +29,6 @@ namespace System.Attributes
             }
         }
     }
+
+
 }

@@ -1,0 +1,6 @@
+@SwaggerDemo_Net8_HostAddress = http://localhost:5082
+
+GET {{SwaggerDemo_Net8_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

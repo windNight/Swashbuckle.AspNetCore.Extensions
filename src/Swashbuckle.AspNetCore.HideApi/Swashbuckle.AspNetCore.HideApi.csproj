@@ -3,9 +3,21 @@
 
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>
+			<!--netstandard2.0;-->
+			<!--net5.0;
+			net6.0;-->
+			net7.0;
+			net8.0;
+			net9.0;
+		</TargetFrameworks>
+
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<OutputPath>..\Output\$(Configuration)</OutputPath>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 		<Description>
 			add HiddenApiAttribute and HiddenSwaggerFilter support config to show hiddenapi or not .
 		</Description>
@@ -17,7 +29,11 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+		<!--<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />-->
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.1.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />
+		<!--<PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />-->
 	</ItemGroup>
 
 

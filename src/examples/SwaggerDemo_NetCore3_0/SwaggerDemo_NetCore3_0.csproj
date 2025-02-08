@@ -1,14 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UserSecretsId>7ac96725-a561-48a5-bf74-4bf8a6b8935e</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<UserSecretsId>7ac96725-a561-48a5-bf74-4bf8a6b8935e</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore.HideApi" Version="1.0.1" />
-  </ItemGroup>
- 
+	<!--<ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.HideApi" Version="1.0.2" />
+  </ItemGroup>-->
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Swashbuckle.AspNetCore.HideApi\Swashbuckle.AspNetCore.HideApi.csproj" />
+	</ItemGroup>
+
+
 </Project>

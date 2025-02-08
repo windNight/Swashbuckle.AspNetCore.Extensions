@@ -4,7 +4,10 @@
 [Bb]in/
 [Oo]bj/
 packages/
+[Oo]uput/
 .vs/
 .idea/
 _ReSharper.Caches/
 .vscode/
+/src/Output/Release/*.nupkg
+/src/Output/Release/*.snupkg

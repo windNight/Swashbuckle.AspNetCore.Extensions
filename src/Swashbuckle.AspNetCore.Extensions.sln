@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swashbuckle.AspNetCore.HideApi", "Swashbuckle.AspNetCore.HideApi\Swashbuckle.AspNetCore.HideApi.csproj", "{B7F2F7C7-79F9-4520-AEB8-AA469A52E475}"
 EndProject
@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwaggerDemo_NetCore3_0", "e
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "res", "res", "{6F9A354D-F59C-4239-A6D9-6BC33B2B0E16}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\build\common.props = ..\build\common.props
 		..\logo.ico = ..\logo.ico
 		..\logo.png = ..\logo.png
@@ -36,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D7A5BA
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwaggerDemo_Net8", "examples\SwaggerDemo_Net8\SwaggerDemo_Net8.csproj", "{F2E57AFF-7689-42BB-B5E8-A19D47674131}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +78,10 @@ Global
 		{3070A152-4306-46C6-81CE-91A8F0E747D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3070A152-4306-46C6-81CE-91A8F0E747D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3070A152-4306-46C6-81CE-91A8F0E747D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2E57AFF-7689-42BB-B5E8-A19D47674131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2E57AFF-7689-42BB-B5E8-A19D47674131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2E57AFF-7689-42BB-B5E8-A19D47674131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2E57AFF-7689-42BB-B5E8-A19D47674131}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +93,7 @@ Global
 		{82D3BBCE-AE18-4641-B968-09072649D385} = {45B35285-1BDB-48FF-B937-1FEF1E192E44}
 		{BBC53AEB-2CE0-4343-A218-CD073E48A358} = {45B35285-1BDB-48FF-B937-1FEF1E192E44}
 		{3070A152-4306-46C6-81CE-91A8F0E747D9} = {45B35285-1BDB-48FF-B937-1FEF1E192E44}
+		{F2E57AFF-7689-42BB-B5E8-A19D47674131} = {45B35285-1BDB-48FF-B937-1FEF1E192E44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18ABACFA-55E5-42AE-89CB-88E267028FF4}
