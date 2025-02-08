@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SwaggerDemo_Net45.Areas.HelpPage.ModelDescriptions

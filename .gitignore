@@ -5,6 +5,7 @@
 [Oo]bj/
 packages/
 [Oo]uput/
+Output/
 .vs/
 .idea/
 _ReSharper.Caches/

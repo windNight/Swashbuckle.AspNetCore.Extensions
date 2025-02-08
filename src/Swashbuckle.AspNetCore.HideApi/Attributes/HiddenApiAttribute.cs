@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
@@ -14,12 +14,8 @@ namespace System.Attributes
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class HiddenApiAttribute : Attribute, IDocumentFilter
     {
-        public bool TestApi { get; set; } = true;
-        public bool SysApi { get; set; } = false;
-
         public HiddenApiAttribute()
         {
-
         }
 
         public HiddenApiAttribute(bool testApi = true, bool sysApi = false)
@@ -27,6 +23,9 @@ namespace System.Attributes
             TestApi = testApi;
             SysApi = sysApi;
         }
+
+        public bool TestApi { get; set; } = true;
+        public bool SysApi { get; set; }
 
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
@@ -36,9 +35,9 @@ namespace System.Attributes
             {
                 try
                 {
-
                     // 获取当前API的HiddenApiAttribute特性
-                    var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>().OfType<HiddenApiAttribute>().ToList();
+                    var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>()
+                        .OfType<HiddenApiAttribute>().ToList();
 
                     if (hiddenApiAttributes.IsNullOrEmpty())
                     {
@@ -55,7 +54,6 @@ namespace System.Attributes
                 }
                 catch (Exception ex)
                 {
-
                 }
             }
         }
@@ -113,17 +111,16 @@ namespace System.Attributes
         }
 
 
-
         public void ApplyV1(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             if (ConfigItems.ShowHiddenApi)
             {
-
                 if (context.ApiDescriptions == null) return;
                 foreach (var apiDescription in context.ApiDescriptions)
                 {
                     // 获取当前API的HiddenApiAttribute特性
-                    var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>().OfType<HiddenApiAttribute>();
+                    var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>()
+                        .OfType<HiddenApiAttribute>();
 
                     if (hiddenApiAttributes.IsNullOrEmpty())
                     {
@@ -144,9 +141,7 @@ namespace System.Attributes
                             swaggerDoc.Paths.Remove(key);
                         }
                     }
-
                 }
-
 
 
                 return;
@@ -157,7 +152,8 @@ namespace System.Attributes
             foreach (var apiDescription in context.ApiDescriptions)
             {
                 // 获取当前API的HiddenApiAttribute特性
-                var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>().OfType<HiddenApiAttribute>();
+                var hiddenApiAttributes = apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>()
+                    .OfType<HiddenApiAttribute>();
 
                 if (hiddenApiAttributes.IsNullOrEmpty())
                 {
@@ -192,15 +188,7 @@ namespace System.Attributes
 
                 //swaggerDoc.Paths.Remove(key);
                 //swaggerDoc.Components.Schemas.Clear();
-
             }
-
-
         }
-
-
-
-
-
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 
 namespace Swashbuckle.AspNetCore.Extensions.@internal
@@ -13,19 +12,16 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         private XmlHelper()
         {
             RegisterHeartRun();
-
         }
 
         public static XmlHelper Instance => LazyInstance.Value;
 
-        public List<string> DocumentFiles { get; set; } = new List<string>();
+        public List<string> DocumentFiles { get; set; } = new();
 
         public void Init()
         {
             DoSync();
         }
-
-
     }
 
     internal partial class XmlHelper
@@ -45,12 +41,10 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             {
                 _keepAliveThread = new Thread(KeepAliveThread)
                 {
-                    Name = "KeepAliveThread:SyncXmls",
-                    IsBackground = true,
+                    Name = "KeepAliveThread:SyncXmls", IsBackground = true
                 };
 
                 _keepAliveThread.Start();
-
             }
             catch (Exception ex)
             {
@@ -62,7 +56,6 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         {
             var loopStartTimeTicks = DateTime.Now.Ticks;
             var loop = 0;
-
 
 
             while (true)
@@ -87,7 +80,6 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
 
                     flag = true;
                     Thread.Sleep(20);
-
                 }
                 catch (Exception ex)
                 {
@@ -101,26 +93,20 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                     // if (!isContinue)
                     //  EgLogHelper.Debug($"{_keepAliveThread.Name}  心跳包 HeartRun 执行 {(flag ? "成功" : "失败")}！ ReInit loopStartTimeTicks={DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                 }
-
             }
-
         }
 
         private void DoSync()
         {
             //TODO your job
             SyncXmlFiles();
-
-
         }
-
 
         #endregion //end HeartRun
     }
 
     internal partial class XmlHelper
     {
-
         public void SyncXmlFiles()
         {
             try
@@ -129,13 +115,11 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 var path = AppContext.BaseDirectory;
                 foreach (var file in Directory.GetFiles(path))
                 {
-
                     if (".xml".Equals(Path.GetExtension(file)))
                     {
                         list.Add(Path.GetFullPath(file));
                     }
                 }
-
 
 
                 if (!list.IsNullOrEmpty())
@@ -144,14 +128,10 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                     DocumentFiles = list;
                     GC.Collect();
                 }
-
             }
             catch (Exception ex)
             {
-
             }
-
         }
     }
-
 }

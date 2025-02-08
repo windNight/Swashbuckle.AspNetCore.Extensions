@@ -2,7 +2,6 @@ namespace SwaggerDemo_Net8
 {
     public class Program
     {
-
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -14,12 +13,8 @@ namespace SwaggerDemo_Net8
                     configBuilder.SetBasePath(AppContext.BaseDirectory)
                         .AddJsonFile("appSettings.json", false, true)
                         ;
-
                 })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
 
         public static void Main22(string[] args)
@@ -41,11 +36,5 @@ namespace SwaggerDemo_Net8
 
             app.Run();
         }
-
-
-
-
-
-
     }
 }

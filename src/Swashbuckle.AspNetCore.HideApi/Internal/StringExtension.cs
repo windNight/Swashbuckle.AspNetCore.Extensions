@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Swashbuckle.AspNetCore.Extensions.@internal
 {
     internal static class StringExtension
     {
-
         public static bool IsNullOrEmpty(this string sourceString)
         {
             return string.IsNullOrEmpty(sourceString);

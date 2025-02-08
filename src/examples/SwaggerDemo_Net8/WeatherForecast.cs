@@ -13,6 +13,7 @@ namespace SwaggerDemo_Net8
 
         /// <summary> summary Summary  </summary>
         public string? Summary { get; set; }
+
         /// <summary> summary SummaryDataDate  </summary>
         public string SummaryDataDate { get; set; }
     }
@@ -32,8 +33,8 @@ namespace SwaggerDemo_Net8
 
         /// <summary> summary Summary  </summary>
         public string? Summary { get; set; }
+
         /// <summary> summary SummaryDataDate  </summary>
         public string SummaryDataDate { get; set; }
     }
-
 }

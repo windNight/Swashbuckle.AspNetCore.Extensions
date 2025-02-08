@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Swashbuckle.NetFx.HideApi.Internals
 {
@@ -42,7 +38,7 @@ namespace Swashbuckle.NetFx.HideApi.Internals
         /// <returns></returns>
         protected static string GetConfigValue(string configKey, bool isThrow = true)
         {
-            return GetConfigValue(configKey, "", isThrow: isThrow);
+            return GetConfigValue(configKey, "", isThrow);
         }
 
         /// <summary>
@@ -55,6 +51,7 @@ namespace Swashbuckle.NetFx.HideApi.Internals
         {
             return GetAppSetting(configKey, defaultValue, isThrow);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="configKey"></param>
@@ -67,7 +64,6 @@ namespace Swashbuckle.NetFx.HideApi.Internals
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="defaultValue"></param>
@@ -79,20 +75,18 @@ namespace Swashbuckle.NetFx.HideApi.Internals
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="defaultValue"></param>
         /// <param name="isThrow"></param>
         /// <returns></returns>
-        static string GetAppSetting(string configKey, string defaultValue = "", bool isThrow = false)
+        private static string GetAppSetting(string configKey, string defaultValue = "", bool isThrow = false)
         {
-            return ReadFromConfig((key) =>
+            return ReadFromConfig(key =>
             {
                 var configValue = ConfigurationManager.AppSettings.Get(key);
                 return configValue;
             }, configKey, defaultValue, isThrow);
-
         }
 
         /// <summary>
@@ -103,15 +97,15 @@ namespace Swashbuckle.NetFx.HideApi.Internals
         /// <returns></returns>
         protected static string GetConnStringValue(string connKey, string defaultValue, bool isThrow = true)
         {
-            return ReadFromConfig((key) =>
+            return ReadFromConfig(key =>
             {
-                string configValue = ConfigurationManager.ConnectionStrings[connKey]?.ToString();
+                var configValue = ConfigurationManager.ConnectionStrings[connKey]?.ToString();
                 return configValue;
             }, connKey, defaultValue, isThrow);
-
         }
 
-        static string ReadFromConfig(Func<string, string> func, string configKey, string defaultValue = "", bool isThrow = false)
+        private static string ReadFromConfig(Func<string, string> func, string configKey, string defaultValue = "",
+            bool isThrow = false)
         {
             if (string.IsNullOrEmpty(configKey)) return defaultValue;
             var configValue = string.Empty;
@@ -128,11 +122,10 @@ namespace Swashbuckle.NetFx.HideApi.Internals
                 if (isThrow)
                     throw new Exception($"查找【{configKey}】节点的相关配置发生异常！", ex);
             }
+
             if (string.IsNullOrEmpty(configValue) && !string.IsNullOrEmpty(defaultValue)) configValue = defaultValue;
 
             return configValue;
         }
-
-
     }
 }

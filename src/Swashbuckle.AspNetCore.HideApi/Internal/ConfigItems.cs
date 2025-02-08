@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Swashbuckle.AspNetCore.Extensions.Abstractions;
 
@@ -15,30 +13,11 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         public bool ShowTestApi { get; set; } = false;
         public bool ShowSysApi { get; set; } = false;
         public bool IsManageApp { get; set; } = false;
-
     }
 
 
     internal class ConfigItems : ConfigItemsBase
     {
-        /// <summary>
-        /// 初始化 ISwaggerConfig
-        /// </summary>
-        /// <param name="swaggerConfig"></param>
-        public static void InitSwaggerConfig(ISwaggerConfig swaggerConfig)
-        {
-            SwaggerConfigImpl = swaggerConfig;
-        }
-
-        /// <summary>
-        /// 初始化 IConfiguration
-        /// </summary>
-        /// <param name="configuration"></param>
-        public static void InitConfiguration(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         /// <summary> 控制是否显示HiddenApi，默认为否 </summary>
         public static bool ShowHiddenApi
         {
@@ -48,14 +27,15 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 {
                     return SwaggerConfigImpl.GetShowHiddenApiConfig();
                 }
+
                 if (SwaggerConfigs != null)
                 {
                     return SwaggerConfigs.ShowHiddenApi;
                 }
+
                 var configValue = GetConfigValue("AppSettings:ShowHiddenApi", false, false);
 
                 return configValue;
-
             }
         }
 
@@ -74,10 +54,13 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 {
                     return SwaggerConfigs.HiddenSwagger;
                 }
+
                 var configValue = GetConfigValue("AppSettings:HiddenSwagger", false, false);
                 return configValue;
             }
-        } /// <summary> 控制是否隐藏Swagger Schemas，默认为否 </summary>
+        }
+
+        /// <summary> 控制是否隐藏Swagger Schemas，默认为否 </summary>
 
         public static bool HiddenSchemas
         {
@@ -92,10 +75,10 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 {
                     return SwaggerConfigs.HiddenSchemas;
                 }
+
                 var configValue = GetConfigValue("AppSettings:HiddenSchemas", false, false);
 
                 return configValue;
-
             }
         }
 
@@ -113,6 +96,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 {
                     return SwaggerConfigs.ShowTestApi;
                 }
+
                 var configValue = GetConfigValue("AppSettings:ShowTestApi", false, false);
                 return configValue;
             }
@@ -132,6 +116,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                 {
                     return SwaggerConfigs.ShowSysApi;
                 }
+
                 var configValue = GetConfigValue("AppSettings:ShowSysApi", false, false);
                 return configValue;
             }
@@ -147,12 +132,34 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             GetConfigValue("AppSettings:AppName", ZeroString, false);
 
         public static SwaggerConfigs SwaggerConfigs => GetSectionValue<SwaggerConfigs>();
+
+        /// <summary>
+        ///     初始化 ISwaggerConfig
+        /// </summary>
+        /// <param name="swaggerConfig"></param>
+        public static void InitSwaggerConfig(ISwaggerConfig swaggerConfig)
+        {
+            SwaggerConfigImpl = swaggerConfig;
+        }
+
+        /// <summary>
+        ///     初始化 IConfiguration
+        /// </summary>
+        /// <param name="configuration"></param>
+        public static void InitConfiguration(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
     }
 
     internal class ConfigItemsBase
     {
+        protected const string TrueString = "1", FalseString = "0", ZeroString = "0";
+
+        protected static string[] TrueStrings = { "1", "true" }, FalseStrings = { "0", "false" };
+
         /// <summary> 优先级高于配置 </summary>
-        protected static ISwaggerConfig SwaggerConfigImpl { get;  set; }
+        protected static ISwaggerConfig SwaggerConfigImpl { get; set; }
 
         /// <summary> 读取默认配置 </summary>
         protected static IConfiguration Configuration { get; set; }
@@ -168,13 +175,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             return GetConfigValue(configKey, "", isThrow);
         }
 
-
-        protected const string TrueString = "1", FalseString = "0", ZeroString = "0";
-
-        protected static string[] TrueStrings = new[] { "1", "true" }, FalseStrings = new[] { "0", "false" };
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="configKey"></param>
         /// <param name="defaultValue"></param>
@@ -198,10 +199,11 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
 
             if (isThrow)
             {
-                throw new ArgumentOutOfRangeException($"configKey", $"configKey({configKey}) is not in TrueStrings({(string.Join(",", TrueStrings))}) or FalseStrings({string.Join(",", FalseStrings)}) ");
+                throw new ArgumentOutOfRangeException("configKey",
+                    $"configKey({configKey}) is not in TrueStrings({string.Join(",", TrueStrings)}) or FalseStrings({string.Join(",", FalseStrings)}) ");
             }
-            return defaultValue;
 
+            return defaultValue;
         }
 
 
@@ -218,7 +220,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             {
                 if (Configuration == null)
                 {
-                    throw new ArgumentException($"Configuration 未初始化！");
+                    throw new ArgumentException("Configuration 未初始化！");
                 }
 
                 configValue = Configuration[configKey];
@@ -241,6 +243,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                     if (!defaultValue.IsNullOrEmpty()) return defaultValue;
                     throw new ArgumentException($"未能找到 【{configKey}】节点的相关配置", ex);
                 }
+
                 configValue = defaultValue;
             }
 
@@ -255,7 +258,7 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         {
             if (sectionKey.IsNullOrEmpty())
                 sectionKey = typeof(T).Name;
-            return GetSectionConfigValue<T>(sectionKey, defaultValue, isThrow);
+            return GetSectionConfigValue(sectionKey, defaultValue, isThrow);
         }
 
         protected static T GetSectionConfigValue<T>(
@@ -263,9 +266,9 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             T defaultValue = default,
             bool isThrow = false)
         {
-            if ((object)defaultValue == null)
-                defaultValue = default(T);
-            T obj = defaultValue;
+            if (defaultValue == null)
+                defaultValue = default;
+            var obj = defaultValue;
             try
             {
                 if (Configuration == null)
@@ -281,8 +284,8 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
                     throw;
                 }
             }
+
             return defaultValue;
         }
     }
-
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http.Description;
 using Swashbuckle.NetFx.HideApi.Internals;
 using Swashbuckle.Swagger;
@@ -12,16 +8,38 @@ namespace Swashbuckle.NetFx.HideApi
 {
     public class HiddenApiAttribute : Attribute, IDocumentFilter
     {
-        private static string[] HiddenRoutes = new[] { "AbpCache", "AbpServiceProxies", "ServiceProxies", "TypeScript" };
-
-        bool IsInHiddenRoutes(string relativePath)
+        private static readonly string[] HiddenRoutes =
         {
-            bool flag = false;
+            "AbpCache", "AbpServiceProxies", "ServiceProxies", "TypeScript"
+        };
+
+        public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
+        {
+            if (apiExplorer.ApiDescriptions == null) return;
+            var hiddenSwagger = ConfigItems.HiddenSwagger;
+            var showhiddenApi = ConfigItems.ShowHiddenApi;
+            foreach (var apiDescription in apiExplorer.ApiDescriptions)
+            {
+                if (IsInHiddenRoutes(apiDescription.RelativePath))
+                {
+                    RemoveHiddenApi(swaggerDoc, apiDescription);
+                    continue;
+                }
+
+                var hidden = hiddenSwagger || (!showhiddenApi && apiDescription
+                    .GetControllerAndActionAttributes<HiddenApiAttribute>().OfType<HiddenApiAttribute>().Any());
+                if (!hidden) continue;
+                RemoveHiddenApi(swaggerDoc, apiDescription);
+            }
+        }
+
+        private bool IsInHiddenRoutes(string relativePath)
+        {
+            var flag = false;
             foreach (var hiddenTag in HiddenRoutes)
             {
                 if (relativePath.Contains(hiddenTag))
                 {
-
                     flag = true;
                     break;
                 }
@@ -30,31 +48,12 @@ namespace Swashbuckle.NetFx.HideApi
             return flag;
         }
 
-        public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
-        {
-            if (apiExplorer.ApiDescriptions == null) return;
-            var hiddenSwagger = ConfigItems.HiddenSwagger;
-            var showhiddenApi = ConfigItems.ShowHiddenApi;
-            foreach (ApiDescription apiDescription in apiExplorer.ApiDescriptions)
-            {
-                if (IsInHiddenRoutes(apiDescription.RelativePath))
-                {
-                    RemoveHiddenApi(swaggerDoc, apiDescription);
-                    continue;
-                }
-
-                var hidden = hiddenSwagger || (!showhiddenApi && Enumerable.OfType<HiddenApiAttribute>(apiDescription.GetControllerAndActionAttributes<HiddenApiAttribute>()).Any());
-                if (!hidden) continue;
-                RemoveHiddenApi(swaggerDoc, apiDescription);
-            }
-        }
-
         private void RemoveHiddenApi(SwaggerDocument swaggerDoc, ApiDescription apiDescription)
         {
-            string key = "/" + apiDescription.RelativePath;
+            var key = "/" + apiDescription.RelativePath;
             if (key.Contains("?"))
             {
-                int idx = key.IndexOf("?", StringComparison.Ordinal);
+                var idx = key.IndexOf("?", StringComparison.Ordinal);
                 key = key.Substring(0, idx);
             }
 
@@ -81,11 +80,7 @@ namespace Swashbuckle.NetFx.HideApi
                 case "patch":
                     swaggerDoc.paths[key].patch = null;
                     break;
-                default:
-                    break;
             }
         }
-
-
     }
 }

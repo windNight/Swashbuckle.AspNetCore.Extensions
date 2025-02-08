@@ -7,10 +7,7 @@ namespace SwaggerDemo_Net45.Areas.HelpPage
     {
         public override string AreaName
         {
-            get
-            {
-                return "HelpPage";
-            }
+            get { return "HelpPage"; }
         }
 
         public override void RegisterArea(AreaRegistrationContext context)

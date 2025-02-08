@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Extensions.@internal;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -31,9 +30,9 @@ namespace Swashbuckle.AspNetCore.HideApi.@internal
                     catch (Exception ex)
                     {
                         Console.WriteLine($" {ex.Message} ");
-
                     }
                 }
+
                 schema.Properties = newProperties;
             }
         }
@@ -44,6 +43,4 @@ namespace Swashbuckle.AspNetCore.HideApi.@internal
             return char.ToUpper(s[0]) + s.Substring(1);
         }
     }
-
 }
-

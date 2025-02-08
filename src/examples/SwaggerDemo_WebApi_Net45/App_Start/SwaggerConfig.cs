@@ -13,5 +13,4 @@ namespace SwaggerDemo_WebApi_Net45
             RegisterBase("v1", "SwaggerDemo_WebApi_Net45");
         }
     }
-
 }

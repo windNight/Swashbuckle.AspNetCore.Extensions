@@ -17,9 +17,9 @@ namespace Swashbuckle.AspNetCore.Extensions
     public static class SwaggerExtension
     {
         /// <summary>
-        ///  Init Config 
-        ///  AddSwaggerGen
-        ///  Add HiddenApiAttribute And HiddenSwaggerFilter
+        ///     Init Config
+        ///     AddSwaggerGen
+        ///     Add HiddenApiAttribute And HiddenSwaggerFilter
         /// </summary>
         /// <param name="services"></param>
         /// <param name="title"></param>
@@ -35,8 +35,10 @@ namespace Swashbuckle.AspNetCore.Extensions
         ///     add all files like *.xml in AppContext.BaseDirectory
         /// </remarks>
         /// <returns></returns>
-        public static IServiceCollection AddSwaggerConfig(this IServiceCollection services, string title, IConfiguration configuration, ISwaggerConfig swaggerConfig = null,
-            string apiVersion = "v1", Action<SwaggerGenOptions> swaggerGenOptionsAction = null, bool paramUpperCamelCase = true)
+        public static IServiceCollection AddSwaggerConfig(this IServiceCollection services, string title,
+            IConfiguration configuration, ISwaggerConfig swaggerConfig = null,
+            string apiVersion = "v1", Action<SwaggerGenOptions> swaggerGenOptionsAction = null,
+            bool paramUpperCamelCase = true)
         {
             if (swaggerConfig != null)
             {
@@ -59,18 +61,14 @@ namespace Swashbuckle.AspNetCore.Extensions
                 {
                     c.DescribeAllParametersInCamelCase();
                 }
+
                 c.SchemaFilter<PascalCaseSchemaFilter>();
                 //c.SchemaFilter<HiddenSchemasResolver>();
 
                 c.DocumentFilter<HiddenApiAttribute>();
                 c.DocumentFilter<HiddenSwaggerFilter>();
 
-                c.SwaggerDoc(apiVersion, new OpenApiInfo
-                {
-                    Title = title,
-                    Version = apiVersion,
-
-                });
+                c.SwaggerDoc(apiVersion, new OpenApiInfo { Title = title, Version = apiVersion });
                 //if (XmlHelper.Instance.DocumentFiles.IsNullOrEmpty())
                 //{
                 var path = AppContext.BaseDirectory;
@@ -93,25 +91,20 @@ namespace Swashbuckle.AspNetCore.Extensions
         }
 
 
-
-
-
         /// <summary>
-        /// UseSwagger And UseSwaggerUI
+        ///     UseSwagger And UseSwaggerUI
         /// </summary>
         /// <param name="app"></param>
         /// <param name="assemblyName"></param>
         /// <param name="apiVersion"></param>
         /// <param name="swaggerOptionsAction"></param>
         /// <param name="swaggerUIOptionsAction"></param>
-        public static void UseSwaggerConfig(this IApplicationBuilder app, string assemblyName, string apiVersion = "v1", Action<SwaggerOptions> swaggerOptionsAction = null, Action<SwaggerUIOptions> swaggerUIOptionsAction = null)
+        public static void UseSwaggerConfig(this IApplicationBuilder app, string assemblyName, string apiVersion = "v1",
+            Action<SwaggerOptions> swaggerOptionsAction = null, Action<SwaggerUIOptions> swaggerUIOptionsAction = null)
         {
             //  XmlHelper.Instance.Init();
 
-            app.UseSwagger(c =>
-            {
-                swaggerOptionsAction?.Invoke(c);
-            });
+            app.UseSwagger(c => { swaggerOptionsAction?.Invoke(c); });
 
             app.UseSwaggerUI(c =>
             {

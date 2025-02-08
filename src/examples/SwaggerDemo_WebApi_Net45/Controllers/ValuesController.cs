@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using Swashbuckle.NetFx.HideApi;
 
@@ -11,17 +7,17 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
     public class ValuesController : ApiController
     {
         /// <summary>
-        /// Get
+        ///     Get
         /// </summary>
         /// <returns></returns>
         // GET api/values
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new[] { "value1", "value2" };
         }
 
         /// <summary>
-        /// getbyid
+        ///     getbyid
         /// </summary>
         /// <param name="id">id </param>
         /// <returns></returns>
@@ -32,7 +28,7 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
         }
 
         /// <summary>
-        /// post
+        ///     post
         /// </summary>
         /// <param name="value">value </param>
         // POST api/values
@@ -41,7 +37,7 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
         }
 
         /// <summary>
-        /// put
+        ///     put
         /// </summary>
         /// <param name="id">id</param>
         /// <param name="value"> value</param>
@@ -51,7 +47,7 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
         }
 
         /// <summary>
-        /// delete by id
+        ///     delete by id
         /// </summary>
         /// <param name="id">id</param>
         // DELETE api/values/5
@@ -60,7 +56,7 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
         }
 
         /// <summary>
-        ///  hidde api
+        ///     hidde api
         /// </summary>
         /// <returns></returns>
         [HiddenApi]
@@ -68,6 +64,5 @@ namespace SwaggerDemo_WebApi_Net45.Controllers
         {
             return "value";
         }
-
     }
 }

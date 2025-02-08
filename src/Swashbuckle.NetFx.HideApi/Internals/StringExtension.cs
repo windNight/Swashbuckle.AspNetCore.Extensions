@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace System
+﻿namespace System
 {
     /// <summary> </summary>
     internal static class StringExtension
@@ -40,10 +34,10 @@ namespace System
         /// <param name="str"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static Decimal ToDecimal(this string str, Decimal defaultValue = 0M)
+        public static decimal ToDecimal(this string str, decimal defaultValue = 0M)
         {
-            Decimal result;
-            if (string.IsNullOrEmpty(str) || !Decimal.TryParse(str, out result))
+            decimal result;
+            if (string.IsNullOrEmpty(str) || !decimal.TryParse(str, out result))
                 return defaultValue;
             return result;
         }

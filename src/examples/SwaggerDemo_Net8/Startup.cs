@@ -5,13 +5,14 @@ namespace SwaggerDemo_Net8
 {
     public class Startup
     {
+        private static readonly string NamespaceName = Assembly.GetEntryAssembly()?.FullName;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
-        static readonly string NamespaceName = Assembly.GetEntryAssembly()?.FullName;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -35,11 +36,8 @@ namespace SwaggerDemo_Net8
 
             app.UseAuthorization();
 
- 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

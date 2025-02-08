@@ -11,12 +11,13 @@ namespace SwaggerDemo_NetCore3_1
 {
     public class Startup
     {
+        private static readonly string NamespaceName = Assembly.GetEntryAssembly()?.FullName;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        static readonly string NamespaceName = Assembly.GetEntryAssembly()?.FullName;
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -24,7 +25,6 @@ namespace SwaggerDemo_NetCore3_1
         {
             services.AddControllers();
             services.AddSwaggerConfig(NamespaceName, Configuration);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,10 +48,7 @@ namespace SwaggerDemo_NetCore3_1
             });
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

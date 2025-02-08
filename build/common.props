@@ -2,7 +2,7 @@
 	<Import Project="version.props" />
 	<PropertyGroup>
 		<Authors> windnight</Authors>
-		<Product> </Product> 
+		<Product> </Product>
 		<Title>$(AssemblyName)</Title>
 		<PackageProjectUrl>https://github.com/windNight/Swashbuckle.AspNetCore.Extensions</PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>

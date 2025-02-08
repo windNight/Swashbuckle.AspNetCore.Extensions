@@ -3,7 +3,7 @@ using System;
 namespace SwaggerDemo_Net45.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
-    /// Describes a type model.
+    ///     Describes a type model.
     /// </summary>
     public abstract class ModelDescription
     {
