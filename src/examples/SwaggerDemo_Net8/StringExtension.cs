@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Swashbuckle.AspNetCore.Extensions.@internal
+namespace SwaggerDemo_Net8.@internal
 {
     internal static class StringExtension
     {

@@ -95,6 +95,8 @@ csharp_new_line_before_members_in_static_converters = true
 csharp_new_line_before_members_in_static_finalizers = true
 csharp_space_around_binary_operators = before_and_after
 csharp_indent_labels = no_change
+# CS8603: 可能的 null 引用返回。
+dotnet_diagnostic.CS8603.severity = none
 
 
 # JSON文件的格式化规则

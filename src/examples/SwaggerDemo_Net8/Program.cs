@@ -11,7 +11,7 @@ namespace SwaggerDemo_Net8
             Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, configBuilder) =>
                 {
                     configBuilder.SetBasePath(AppContext.BaseDirectory)
-                        .AddJsonFile("appSettings.json", false, true)
+                        .AddJsonFile("appsettings.json", false, true)
                         ;
                 })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });

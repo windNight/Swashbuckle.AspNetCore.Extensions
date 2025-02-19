@@ -18,8 +18,20 @@ namespace SwaggerDemo_Net8
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerConfig(NamespaceName, Configuration);
+
+            services.AddSwaggerConfig(NamespaceName, Configuration, signKeyDict: SignDict);
         }
+
+
+        Dictionary<string, string> SignDict = new Dictionary<string, string>
+        {
+            {"Authorization","格式 Bearer xx"},
+            {"AppId","执行的AppId"},
+            {"AppCode","执行的AppCode"},
+            {"AppToken","当前请求的Token"},
+            {"H1","H1"},
+            {"Ts","当前时间戳"},
+        };
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,15 +41,20 @@ namespace SwaggerDemo_Net8
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseSwaggerConfig(NamespaceName);
 
             app.UseAuthorization();
 
+            //  app.UseMiddleware<SignatureValidationMiddleware>(SignDict);
+            app.UseMiddleware<SelfSwaggerSignValidMiddleware>(SignDict);
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
         }
+
+
     }
 }

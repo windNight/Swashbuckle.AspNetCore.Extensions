@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Swashbuckle.AspNetCore.Extensions.@internal
+namespace SwaggerDemo_Net8.@internal
 {
     internal static class CustomAttributeExtension
     {

@@ -3,19 +3,19 @@ namespace SwaggerDemo_Net8
     public class WeatherForecast
     {
         /// <summary> summary Date  </summary>
-        public DateOnly Date { get; set; }
+        public DateOnly Date { get; set; } = DateOnly.MinValue;
 
         /// <summary> summary TemperatureC  </summary>
-        public int TemperatureC { get; set; }
+        public int TemperatureC { get; set; } = 0;
 
         /// <summary> summary TemperatureF  </summary>
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 
         /// <summary> summary Summary  </summary>
-        public string? Summary { get; set; }
+        public string? Summary { get; set; } = "";
 
         /// <summary> summary SummaryDataDate  </summary>
-        public string SummaryDataDate { get; set; }
+        public string SummaryDataDate { get; set; } = "";
     }
 
 

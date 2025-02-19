@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Attributes;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +39,7 @@ namespace Swashbuckle.AspNetCore.Extensions
         public static IServiceCollection AddSwaggerConfig(this IServiceCollection services, string title,
             IConfiguration configuration, ISwaggerConfig swaggerConfig = null,
             string apiVersion = "v1", Action<SwaggerGenOptions> swaggerGenOptionsAction = null,
-            bool paramUpperCamelCase = true)
+            bool paramUpperCamelCase = true, Dictionary<string, string> signKeyDict = null)
         {
             if (swaggerConfig != null)
             {
@@ -62,11 +63,13 @@ namespace Swashbuckle.AspNetCore.Extensions
                     c.DescribeAllParametersInCamelCase();
                 }
 
+
                 c.SchemaFilter<PascalCaseSchemaFilter>();
                 //c.SchemaFilter<HiddenSchemasResolver>();
 
                 c.DocumentFilter<HiddenApiAttribute>();
                 c.DocumentFilter<HiddenSwaggerFilter>();
+
 
                 c.SwaggerDoc(apiVersion, new OpenApiInfo { Title = title, Version = apiVersion });
                 //if (XmlHelper.Instance.DocumentFiles.IsNullOrEmpty())
@@ -86,6 +89,47 @@ namespace Swashbuckle.AspNetCore.Extensions
                 //}
 
                 swaggerGenOptionsAction?.Invoke(c);
+
+                if (!signKeyDict.IsNullOrEmpty())
+                {
+                    var securityRequirements = new OpenApiSecurityRequirement();
+                    foreach (var item in signKeyDict)
+                    {
+                        var name = item.Key;
+                        var des = item.Value;
+                        if (!name.IsNullOrEmpty())
+                        {
+                            // 添加自定义请求头
+                            c.AddSecurityDefinition(name, new OpenApiSecurityScheme
+                            {
+                                Name = name,
+                                Description = des,
+                                In = ParameterLocation.Header,
+                                Type = SecuritySchemeType.ApiKey,
+                            });
+
+                            securityRequirements.Add(new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = name,
+                                },
+                            }, new string[] { });
+
+                        }
+
+                    }
+
+                    if (!securityRequirements.IsNullOrEmpty())
+                    {
+                        c.AddSecurityRequirement(securityRequirements);
+                    }
+
+                }
+
+
+
             });
             return services;
         }
@@ -106,13 +150,19 @@ namespace Swashbuckle.AspNetCore.Extensions
 
             app.UseSwagger(c => { swaggerOptionsAction?.Invoke(c); });
 
+
             app.UseSwaggerUI(c =>
             {
                 c.DefaultModelExpandDepth(-1);
                 c.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", assemblyName);
+                c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"); // 保留授权信息
+
                 //c.RoutePrefix = string.Empty;
                 swaggerUIOptionsAction?.Invoke(c);
             });
+
+
+
         }
     }
 }
