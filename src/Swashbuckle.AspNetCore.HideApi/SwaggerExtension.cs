@@ -69,6 +69,7 @@ namespace Swashbuckle.AspNetCore.Extensions
 
                 c.DocumentFilter<HiddenApiAttribute>();
                 c.DocumentFilter<HiddenSwaggerFilter>();
+                //c.OperationFilter<HiddenSwaggerFilter>();
 
 
                 c.SwaggerDoc(apiVersion, new OpenApiInfo { Title = title, Version = apiVersion });
@@ -108,28 +109,22 @@ namespace Swashbuckle.AspNetCore.Extensions
                                 Type = SecuritySchemeType.ApiKey,
                             });
 
-                            securityRequirements.Add(new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
+                            securityRequirements.Add(
+                                new OpenApiSecurityScheme
                                 {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = name,
-                                },
-                            }, new string[] { });
-
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme, Id = name,
+                                    },
+                                }, new string[] { });
                         }
-
                     }
 
                     if (!securityRequirements.IsNullOrEmpty())
                     {
                         c.AddSecurityRequirement(securityRequirements);
                     }
-
                 }
-
-
-
             });
             return services;
         }
@@ -160,9 +155,6 @@ namespace Swashbuckle.AspNetCore.Extensions
                 //c.RoutePrefix = string.Empty;
                 swaggerUIOptionsAction?.Invoke(c);
             });
-
-
-
         }
     }
 }

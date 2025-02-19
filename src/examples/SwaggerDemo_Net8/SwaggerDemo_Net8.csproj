@@ -15,4 +15,10 @@
         <ProjectReference Include="..\..\Swashbuckle.AspNetCore.HideApi\Swashbuckle.AspNetCore.HideApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
