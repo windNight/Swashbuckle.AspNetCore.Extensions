@@ -19,14 +19,50 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
     //    public bool NoAuth { get; }
     //}
 
-    public abstract class SwaggerSignValidMiddleware
+    public abstract class SwaggerSignValidMiddlewareBase
     {
         protected readonly RequestDelegate _next;
 
-        protected readonly Dictionary<string, string> _signKeyDict;
+        protected Dictionary<string, string> _signKeyDict { get; private set; }
+
+        private List<SwaggerSignConfig> SignConfigs => ConfigItems.SwaggerSignConfigs;
 
 
-        public SwaggerSignValidMiddleware(RequestDelegate next, Dictionary<string, string> signKeyDict)
+        protected virtual Dictionary<string, string> DefaultSignDict { get; } = new Dictionary<string, string>();
+
+        protected virtual Dictionary<string, string> CurrentSignKeyDict
+        {
+            get
+            {
+
+                try
+                {
+                    if (!DefaultSignDict.IsNullOrEmpty())
+                    {
+                        return DefaultSignDict;
+                    }
+                    if (!_signKeyDict.IsNullOrEmpty())
+                    {
+                        return _signKeyDict;
+                    }
+                    var signKeyDict = ConfigItems.SwaggerConfigs.GetSignDict();
+                    return signKeyDict;
+
+                }
+                catch (Exception)
+                {
+                    return new Dictionary<string, string>();
+                }
+            }
+        }
+
+        public SwaggerSignValidMiddlewareBase(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+
+        public SwaggerSignValidMiddlewareBase(RequestDelegate next, Dictionary<string, string> signKeyDict)
         {
             _next = next;
             _signKeyDict = signKeyDict ?? new Dictionary<string, string>();
@@ -133,9 +169,11 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
         protected virtual Dictionary<string, string> TryGetValidData(HttpContext context)
         {
             var signData = new Dictionary<string, string>();
-            if (!_signKeyDict.IsNullOrEmpty())
+            var signKeyDict = CurrentSignKeyDict;
+
+            if (!signKeyDict.IsNullOrEmpty())
             {
-                foreach (var item in _signKeyDict)
+                foreach (var item in signKeyDict)
                 {
                     var key = item.Key;
                     var data = GetHeaderData(context.Request, key);
@@ -177,7 +215,7 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
                 {
                     return await Task.FromResult(true);
                 }
-                if (!_signKeyDict.IsNullOrEmpty())
+                if (!CurrentSignKeyDict.IsNullOrEmpty())
                 {
                     var signData = TryGetValidData(context);
 

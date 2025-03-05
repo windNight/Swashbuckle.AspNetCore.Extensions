@@ -20,6 +20,7 @@ namespace SwaggerDemo_Net8
             services.AddControllers();
 
             services.AddSwaggerConfig(NamespaceName, Configuration, signKeyDict: SignDict);
+            //services.AddSwaggerConfig(NamespaceName, Configuration);
         }
 
 
@@ -48,8 +49,9 @@ namespace SwaggerDemo_Net8
 
             app.UseAuthorization();
 
-            //  app.UseMiddleware<SignatureValidationMiddleware>(SignDict);
+            //  app.UseMiddleware<SwaggerSignValidMiddlewareBase>(SignDict);
             app.UseMiddleware<SelfSwaggerSignValidMiddleware>(SignDict);
+            //app.UseMiddleware<SelfSwaggerSignValidMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

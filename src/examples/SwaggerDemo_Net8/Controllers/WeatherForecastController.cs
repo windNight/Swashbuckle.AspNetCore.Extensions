@@ -4,7 +4,6 @@ using SwaggerDemo_Net8.@internal;
 
 namespace SwaggerDemo_Net8.Controllers
 {
-    [ApiController]
     [Route("api/test")]
     public class WeatherForecastController : ControllerBase
     {
@@ -67,9 +66,31 @@ namespace SwaggerDemo_Net8.Controllers
             return new { signData, rangeData };
         }
 
+        [HttpGet("t22")]
+        [ProducesResponseType(typeof(WeatherForecast), 10210)]
+        public TestInput Get11122([FromQuery] TestInput input)
+        {
+            var signData = new Dictionary<string, string>();
+
+            foreach (var item in SignDict)
+            {
+                var data = GetHeaderData(Request, item.Key);
+                signData.Add(item.Key, data);
+            }
+
+            var rangeData = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
+            })
+                .ToArray();
+            return input;
+        }
 
         [HttpGet("t")]
-        public object Get111()
+        [ProducesResponseType(typeof(WeatherForecast), 10210)]
+        public object Get111([FromQuery] TestInput input)
         {
             var signData = new Dictionary<string, string>();
 
@@ -91,7 +112,7 @@ namespace SwaggerDemo_Net8.Controllers
 
 
         [HttpGet("tt1")]
-        public IEnumerable<WeatherForecast> Get([FromQuery] WeatherForecast input)
+        public IEnumerable<WeatherForecast> Get([FromQuery] TestInput input)
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

@@ -13,12 +13,17 @@ namespace SwaggerDemo_Net8
             NoAuth = noauth;
         }
 
-        public bool NoAuth { get; }
+        public bool NoAuth { get; } = false;
     }
 
- 
-    public class SelfSwaggerSignValidMiddleware : SwaggerSignValidMiddleware
+
+    public class SelfSwaggerSignValidMiddleware : SwaggerSignValidMiddlewareBase
     {
+        public SelfSwaggerSignValidMiddleware(RequestDelegate next) : base(next)
+        {
+
+        }
+
         public SelfSwaggerSignValidMiddleware(RequestDelegate next, Dictionary<string, string> signKeyDict) : base(next, signKeyDict)
         {
         }

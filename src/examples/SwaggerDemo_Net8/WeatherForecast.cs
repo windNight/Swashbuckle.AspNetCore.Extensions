@@ -1,5 +1,11 @@
 namespace SwaggerDemo_Net8
 {
+    public class TestInput
+    {
+        public int TemperatureC { get; set; } = 0;
+        public string SummaryDataDate { get; set; } = "";
+
+    }
     public class WeatherForecast
     {
         /// <summary> summary Date  </summary>

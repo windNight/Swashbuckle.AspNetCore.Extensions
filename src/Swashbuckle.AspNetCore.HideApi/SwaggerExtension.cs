@@ -1,13 +1,11 @@
-using System;
 using System.Attributes;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Extensions.Abstractions;
 using Swashbuckle.AspNetCore.Extensions.@internal;
+using Swashbuckle.AspNetCore.HideApi;
 using Swashbuckle.AspNetCore.HideApi.@internal;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -39,7 +37,8 @@ namespace Swashbuckle.AspNetCore.Extensions
         public static IServiceCollection AddSwaggerConfig(this IServiceCollection services, string title,
             IConfiguration configuration, ISwaggerConfig swaggerConfig = null,
             string apiVersion = "v1", Action<SwaggerGenOptions> swaggerGenOptionsAction = null,
-            bool paramUpperCamelCase = true, Dictionary<string, string> signKeyDict = null)
+            bool paramUpperCamelCase = true, Dictionary<string, string> signKeyDict = null,
+            Dictionary<string, string> resDict = null, bool useDefaultRes = false)
         {
             if (swaggerConfig != null)
             {
@@ -57,6 +56,7 @@ namespace Swashbuckle.AspNetCore.Extensions
                 //    // 根据apiDesc来决定是否包含某个API到Swagger文档
                 //    return true; // 或者根据条件返回false
                 //});
+
 
                 if (!paramUpperCamelCase)
                 {
@@ -91,42 +91,89 @@ namespace Swashbuckle.AspNetCore.Extensions
 
                 swaggerGenOptionsAction?.Invoke(c);
 
-                if (!signKeyDict.IsNullOrEmpty())
+                ProcessSecurityMode(c, configuration, signKeyDict);
+                //ProcessResponseMode(c, configuration, resDict);
+            });
+
+            return services;
+        }
+
+        private static void ProcessResponseMode(SwaggerGenOptions c, IConfiguration configuration,
+            Dictionary<string, string> resDict = null, bool useDefaultRes = false)
+        {
+            if (resDict.IsNullOrEmpty())
+            {
+                var sectionKey = nameof(SwaggerConfigs);
+                var config = configuration.GetSection(sectionKey).Get<SwaggerConfigs>();
+                resDict = config.ResConfigs;
+                if (resDict.IsNullOrEmpty() && useDefaultRes)
                 {
-                    var securityRequirements = new OpenApiSecurityRequirement();
-                    foreach (var item in signKeyDict)
+                    resDict = new Dictionary<string, string>
                     {
-                        var name = item.Key;
-                        var des = item.Value;
-                        if (!name.IsNullOrEmpty())
+                        { "0", "OK" },
+                        { "100400", "BadRequest" },
+                        { "100401", "Unauthorized" },
+                        { "100404", "NOT FOUND" },
+                        { "100500", "SystemError" },
+                    };
+                }
+            }
+
+            if (resDict.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            c.OperationFilter<CustomResponseOperationFilter>(resDict);
+
+
+        }
+
+        private static void ProcessSecurityMode(SwaggerGenOptions c, IConfiguration configuration,
+            Dictionary<string, string> signKeyDict = null)
+        {
+            if (signKeyDict.IsNullOrEmpty())
+            {
+                var sectionKey = nameof(SwaggerConfigs);
+                var config = configuration.GetSection(sectionKey).Get<SwaggerConfigs>();
+                signKeyDict = config.GetSignDict();
+            }
+
+            if (!signKeyDict.IsNullOrEmpty())
+            {
+                var securityRequirements = new OpenApiSecurityRequirement();
+                foreach (var item in signKeyDict)
+                {
+                    var name = item.Key;
+                    var des = item.Value;
+                    if (!name.IsNullOrEmpty())
+                    {
+                        // 添加自定义请求头
+                        c.AddSecurityDefinition(name, new OpenApiSecurityScheme
                         {
-                            // 添加自定义请求头
-                            c.AddSecurityDefinition(name, new OpenApiSecurityScheme
+                            Name = name,
+                            Description = des,
+                            In = ParameterLocation.Header,
+                            Type = SecuritySchemeType.ApiKey,
+                        });
+
+                        securityRequirements.Add(
+                            new OpenApiSecurityScheme
                             {
-                                Name = name,
-                                Description = des,
-                                In = ParameterLocation.Header,
-                                Type = SecuritySchemeType.ApiKey,
-                            });
-
-                            securityRequirements.Add(
-                                new OpenApiSecurityScheme
+                                Reference = new OpenApiReference
                                 {
-                                    Reference = new OpenApiReference
-                                    {
-                                        Type = ReferenceType.SecurityScheme, Id = name,
-                                    },
-                                }, new string[] { });
-                        }
-                    }
-
-                    if (!securityRequirements.IsNullOrEmpty())
-                    {
-                        c.AddSecurityRequirement(securityRequirements);
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = name,
+                                },
+                            }, new string[] { });
                     }
                 }
-            });
-            return services;
+
+                if (!securityRequirements.IsNullOrEmpty())
+                {
+                    c.AddSecurityRequirement(securityRequirements);
+                }
+            }
         }
 
 
@@ -142,6 +189,19 @@ namespace Swashbuckle.AspNetCore.Extensions
             Action<SwaggerOptions> swaggerOptionsAction = null, Action<SwaggerUIOptions> swaggerUIOptionsAction = null)
         {
             //  XmlHelper.Instance.Init();
+
+
+            app.Use(async (context, next) =>
+            {
+                if (ConfigItems.HiddenSwagger && context.Request.Path.StartsWithSegments("/swagger"))
+                {
+                    context.Response.StatusCode = 404;
+                    return;
+                }
+
+                await next();
+            });
+
 
             app.UseSwagger(c => { swaggerOptionsAction?.Invoke(c); });
 

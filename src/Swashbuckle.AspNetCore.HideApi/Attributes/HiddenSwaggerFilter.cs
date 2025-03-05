@@ -20,9 +20,13 @@ namespace System.Attributes
                     swaggerDoc.SecurityRequirements.Clear();
                     swaggerDoc.Info = null;
                     swaggerDoc.Paths.Clear();
+                    swaggerDoc.Workspace = null;
+                    swaggerDoc.Servers.Clear();
 
                     swaggerDoc.Components.Schemas.Clear();
                     swaggerDoc.Annotations?.Clear();
+
+                    
                 }
                 catch
                 {
@@ -30,21 +34,5 @@ namespace System.Attributes
             }
         }
 
-        //public void Apply(OpenApiOperation operation, OperationFilterContext context)
-        //{
-        //    if (ConfigItems.HiddenSwagger)
-        //    {
-        //        try
-        //        {
-        //            operation.Security = null; // 移除授权要求
-        //        }
-        //        catch (Exception ex)
-        //        {
-
-        //        }
-        //    }
-
-
-        //}
     }
 }

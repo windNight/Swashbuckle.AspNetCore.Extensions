@@ -13,6 +13,57 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         public bool ShowTestApi { get; set; } = false;
         public bool ShowSysApi { get; set; } = false;
         public bool IsManageApp { get; set; } = false;
+
+        public List<SwaggerSignConfig> SignConfigs { get; set; } = new List<SwaggerSignConfig>();
+        public Dictionary<string, string> ResConfigs { get; set; } = new Dictionary<string, string>();
+
+        public Dictionary<string, string> GetSignDict()
+        {
+            var dict = new Dictionary<string, string>();
+            foreach (var signConfig in SignConfigs)
+            {
+                var key = signConfig.Key;
+                if (!dict.ContainsKey(key))
+                {
+                    dict[key] = signConfig.Name;
+                }
+            }
+            return dict;
+        }
+
+        //public Dictionary<string, string> GetResDict()
+        //{
+        //    var dict = new Dictionary<string, string>();
+        //    foreach (var item in ResConfigs)
+        //    {
+        //        var key = item.Key;
+        //        if (!dict.ContainsKey(key))
+        //        {
+        //            dict[key] = item.Name;
+        //        }
+        //    }
+        //    return dict;
+        //}
+
+
+    }
+
+    internal class SwaggerResConfig
+    {
+        public string Key { get; set; } = "";
+        public string Name { get; set; } = "";
+    }
+
+    internal class SwaggerSignConfig
+    {
+        public string Key { get; set; } = "";
+        public string Name { get; set; } = "";
+        public bool AutoFill { get; set; } = false;
+
+        public override string ToString()
+        {
+            return $"{Key}:{Name}";
+        }
     }
 
 
@@ -132,6 +183,8 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             GetConfigValue("AppSettings:AppName", ZeroString, false);
 
         public static SwaggerConfigs SwaggerConfigs => GetSectionValue<SwaggerConfigs>();
+        public static List<SwaggerSignConfig> SwaggerSignConfigs => SwaggerConfigs?.SignConfigs ?? new List<SwaggerSignConfig>();
+
 
         /// <summary>
         ///     初始化 ISwaggerConfig

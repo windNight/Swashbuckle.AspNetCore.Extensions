@@ -62,10 +62,12 @@ namespace System.Attributes
         {
             if (hiddenApiAttributes.Any(attr => attr.SysApi))
             {
-                if (!ConfigItems.ShowSysApi)
-                {
-                    return true;
-                }
+                return !ConfigItems.ShowSysApi;
+
+                //if (!ConfigItems.ShowSysApi)
+                //{
+                //    return true;
+                //}
             }
 
             if (hiddenApiAttributes.Any(attr => attr.TestApi))
