@@ -199,6 +199,12 @@ namespace Swashbuckle.AspNetCore.Extensions
                     return;
                 }
 
+                if (ConfigItems.IsOnline && !ConfigItems.SwaggerOnlineDebug)
+                {
+                    context.Response.StatusCode = 404;
+                    return;
+                }
+
                 await next();
             });
 

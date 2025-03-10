@@ -182,7 +182,19 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
         public static string SysAppName =>
             GetConfigValue("AppSettings:AppName", ZeroString, false);
 
+        public static string EnvName =>
+            GetConfigValue("AppSettings:EnvName", "online", false);
+
+        public static bool SwaggerOnlineDebug =>
+            GetAppConfigValue("SwaggerOnlineDebug", false, false);
+
+        public static bool SwaggerCanDebug => (IsOnline && SwaggerOnlineDebug) || !IsOnline;
+
+        public static bool IsOnline =>
+            EnvName.IsNullOrEmpty() || EnvName.Equals("pre", StringComparison.OrdinalIgnoreCase) || EnvName.Equals("online", StringComparison.OrdinalIgnoreCase) || EnvName.Equals("production", StringComparison.OrdinalIgnoreCase);
+
         public static SwaggerConfigs SwaggerConfigs => GetSectionValue<SwaggerConfigs>();
+
         public static List<SwaggerSignConfig> SwaggerSignConfigs => SwaggerConfigs?.SignConfigs ?? new List<SwaggerSignConfig>();
 
 
@@ -259,6 +271,45 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
             return defaultValue;
         }
 
+        protected static bool GetAppConfigValue(string configKey, bool defaultValue = false, bool isThrow = true)
+        {
+            var configValue = GetAppConfigValue(configKey, "", false);
+            if (configValue.IsNullOrEmpty())
+            {
+                return defaultValue;
+            }
+
+            if (TrueStrings.Contains(configValue))
+            {
+                return true;
+            }
+
+            if (FalseStrings.Contains(configValue))
+            {
+                return false;
+            }
+
+            if (isThrow)
+            {
+                throw new ArgumentOutOfRangeException("configKey",
+                    $"configKey({configKey}) is not in TrueStrings({string.Join(",", TrueStrings)}) or FalseStrings({string.Join(",", FalseStrings)}) ");
+            }
+
+            return defaultValue;
+        }
+
+        protected static string GetAppConfigValue(string configKey, string defaultValue = "", bool isThrow = true)
+        {
+            var key = configKey;
+            if (!configKey.StartsWith("AppSettings:"))
+            {
+                key = $"AppSettings:{configKey}";
+            }
+
+            return GetConfigValue(key, defaultValue, isThrow);
+
+
+        }
 
         /// <summary>
         /// </summary>
@@ -302,6 +353,9 @@ namespace Swashbuckle.AspNetCore.Extensions.@internal
 
             return configValue;
         }
+
+
+
 
         protected static T GetSectionValue<T>(
             string sectionKey = "",

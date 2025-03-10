@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Extensions.@internal;
 
@@ -19,42 +14,9 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
     //    public bool NoAuth { get; }
     //}
 
-    public abstract class SwaggerSignValidMiddlewareBase
+    public abstract partial class SwaggerSignValidMiddlewareBase
     {
         protected readonly RequestDelegate _next;
-
-        protected Dictionary<string, string> _signKeyDict { get; private set; }
-
-        private List<SwaggerSignConfig> SignConfigs => ConfigItems.SwaggerSignConfigs;
-
-
-        protected virtual Dictionary<string, string> DefaultSignDict { get; } = new Dictionary<string, string>();
-
-        protected virtual Dictionary<string, string> CurrentSignKeyDict
-        {
-            get
-            {
-
-                try
-                {
-                    if (!DefaultSignDict.IsNullOrEmpty())
-                    {
-                        return DefaultSignDict;
-                    }
-                    if (!_signKeyDict.IsNullOrEmpty())
-                    {
-                        return _signKeyDict;
-                    }
-                    var signKeyDict = ConfigItems.SwaggerConfigs.GetSignDict();
-                    return signKeyDict;
-
-                }
-                catch (Exception)
-                {
-                    return new Dictionary<string, string>();
-                }
-            }
-        }
 
         public SwaggerSignValidMiddlewareBase(RequestDelegate next)
         {
@@ -68,6 +30,40 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
             _signKeyDict = signKeyDict ?? new Dictionary<string, string>();
         }
 
+        protected Dictionary<string, string> _signKeyDict { get; }
+
+        private List<SwaggerSignConfig> SignConfigs => ConfigItems.SwaggerSignConfigs;
+
+        protected virtual bool SwaggerCanDebug => ConfigItems.SwaggerCanDebug;
+
+        protected virtual Dictionary<string, string> DefaultSignDict { get; } = new();
+
+        protected virtual Dictionary<string, string> CurrentSignKeyDict
+        {
+            get
+            {
+                try
+                {
+                    if (!DefaultSignDict.IsNullOrEmpty())
+                    {
+                        return DefaultSignDict;
+                    }
+
+                    if (!_signKeyDict.IsNullOrEmpty())
+                    {
+                        return _signKeyDict;
+                    }
+
+                    var signKeyDict = ConfigItems.SwaggerConfigs.GetSignDict();
+                    return signKeyDict;
+                }
+                catch (Exception)
+                {
+                    return new Dictionary<string, string>();
+                }
+            }
+        }
+
         protected virtual List<string> AllowedPaths => new() { "/api" };
 
         protected abstract bool CheckValidData(HttpContext context, Dictionary<string, string> dict);
@@ -75,6 +71,25 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            try
+            {
+                await DoInvokeAsync(context);
+            }
+            catch (Exception ex)
+            {
+                await _next(context);
+            }
+
+        }
+
+        protected virtual async Task DoInvokeAsync(HttpContext context)
+        {
+            if (!SwaggerCanDebug)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Invalid or missing signature");
+                return;
+            }
 
             if (!IsPathAllowed(context.Request.Path))
             {
@@ -104,7 +119,6 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Invalid or missing signature");
             }
-
         }
 
         protected virtual bool IsPathAllowed(PathString path)
@@ -119,6 +133,7 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
             {
                 return false;
             }
+
             if (!refer.Contains("swagger", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
@@ -128,7 +143,7 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
         }
 
         /// <summary>
-        ///  需要额外自行实现
+        ///     需要额外自行实现
         ///     检查当前请求是否标记了 <see cref="NonAuthAttribute" />  属性。
         ///     如果标记了 <see cref="NonAuthAttribute" />，则跳过验证。
         /// </summary>
@@ -159,7 +174,6 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
 
             return false;
         }
-
 
 
         /// <summary>
@@ -215,6 +229,7 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
                 {
                     return await Task.FromResult(true);
                 }
+
                 if (!CurrentSignKeyDict.IsNullOrEmpty())
                 {
                     var signData = TryGetValidData(context);
@@ -243,8 +258,7 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
 
         protected virtual long ConvertToUnixTime(DateTime dateTime, bool milliseconds = true)
         {
-
-            DateTimeOffset dateTimeOffset = new(dateTime);
+            var dateTimeOffset = new DateTimeOffset(dateTime);
             if (milliseconds)
             {
                 return dateTimeOffset.ToUnixTimeMilliseconds();
@@ -253,6 +267,4 @@ namespace Swashbuckle.AspNetCore.HideApi.Middleware
             return dateTimeOffset.ToUnixTimeSeconds();
         }
     }
-
-
 }

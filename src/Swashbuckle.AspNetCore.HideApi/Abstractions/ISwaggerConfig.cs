@@ -1,4 +1,4 @@
-﻿namespace Swashbuckle.AspNetCore.Extensions.Abstractions
+namespace Swashbuckle.AspNetCore.Extensions.Abstractions
 {
     public interface ISwaggerConfig
     {
@@ -31,5 +31,8 @@
         /// </summary>
         /// <returns></returns>
         bool GetHiddenSchemasConfig();
+
+
+        bool IsOnline();
     }
 }
